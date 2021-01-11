@@ -1,1 +1,43 @@
-Hello
+#Machine Learning HW 
+#November 1, 2020
+
+setwd("~/Documents/NC State/Fall 3/Machine Learning")
+
+library(dplyr)
+library('randomForest')
+
+train1 <- read.csv("MLProject21_train.csv")
+names(train1)
+
+train2 <- train1 %>%
+  select(-cont.target, -binary.target2) %>%
+  mutate(binary_target1 = as.factor(binary.target1)) %>%
+  select(-binary.target1)
+
+####################################################
+#############Random Forest Models
+####################################################
+rf = randomForest(binary_target1 ~ .-binary_target1, data=train2, ntree=25, type='class',
+                  sampsize = 10000, mtry = sqrt(127), norm.votes = TRUE)
+
+rf #OOB error rate = 10.4%
+varImpPlot(rf) #looks like v33 is most important
+
+
+rf1 = randomForest(binary_target1 ~ .-binary_target1, data=train2, ntree=50, type='class',
+                                    sampsize = 10000, mtry = sqrt(127))
+rf1
+
+rf2 = randomForest(binary_target1 ~ .-binary_target1, data=train2, ntree=10, 
+                   type='class', sampsize = 10000)
+rf2
+
+rf3 = randomForest(binary_target1 ~ .-binary_target1, data=train2, ntree=10, 
+                   type='class', sampsize = 10000, norm.votes = TRUE)
+rf3
+
+
+
+
+
+
